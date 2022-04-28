@@ -36,12 +36,21 @@ class Pr extends CI_Controller {
             $po_id = $max+1;
         }
 
-        $rows_series = $this->super_model->count_rows("po_series");
+/*        $rows_series = $this->super_model->count_rows("po_series");
         if($rows_series==0){
             $series=1000;
         } else {
             $max = $this->super_model->get_max("po_series", "series");
             $series = $max+1;
+        }*/
+        $year=date('Y');
+        $series_rows = $this->super_model->count_custom_where("po_head","po_date LIKE '%$year%'");
+        if($series_rows==0){
+            $series=1000;
+        }else{
+            $po_max = $this->super_model->get_max_where("po_head", "po_no","po_date LIKE '%$year%'");
+            $po_exp=explode("-", $po_max);
+            $series = $po_exp[1]+1;
         }
 
         $pr_id = $this->input->post('pr_ids');
@@ -170,13 +179,25 @@ class Pr extends CI_Controller {
         }
 
 
-        $rows_series = $this->super_model->count_rows("po_series");
+/*        $rows_series = $this->super_model->count_rows("po_series");
         if($rows_series==0){
             $series=1000;
         } else {
             $max = $this->super_model->get_max("po_series", "series");
             $series = $max+1;
+        }*/
+
+        $year=date('Y');
+        $series_rows = $this->super_model->count_custom_where("po_head","po_date LIKE '%$year%'");
+        if($series_rows==0){
+            $series=1000;
+        }else{
+            $po_max = $this->super_model->get_max_where("po_head", "po_no","po_date LIKE '%$year%'");
+            
+            $po_exp=explode("-", $po_max);
+            $series = $po_exp[1]+1;
         }
+
         $pr_no = $this->super_model->select_column_where("pr_head","pr_no","pr_id",$pr_id);
         $po_no = 'P'.$pr_no.'-'.$series;
         $data_series = array(
@@ -304,7 +325,7 @@ class Pr extends CI_Controller {
             $maxid=$this->super_model->get_max("pr_head", "pr_id");
             $pr_id=$maxid+1;
         }
-
+        $year=date('Y');
         $pr = trim($objPHPExcel->getActiveSheet()->getCell('C7')->getValue());
         $date_prepared = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($objPHPExcel->getActiveSheet()->getCell('C8')->getValue()));
         /*$date_issued = trim($objPHPExcel->getActiveSheet()->getCell('C9')->getValue());*/
@@ -315,16 +336,31 @@ class Pr extends CI_Controller {
         $requestor = trim($objPHPExcel->getActiveSheet()->getCell('I9')->getValue());
         $urgency_no = trim($objPHPExcel->getActiveSheet()->getCell('I10')->getValue());
 
-        $series_rows = $this->super_model->count_rows("pr_series");
+        /*$series_rows = $this->super_model->count_rows("pr_series");
         if($series_rows==0){
             $pr_series=1000;
         } else {
             $max_series=$this->super_model->get_max("pr_series", "series_no");
             $pr_series=$max_series+1;
+        }*/
+
+        $series_rows = $this->super_model->count_custom_where("pr_head","date_prepared LIKE '%$year%'");
+        //echo $year;
+        if($series_rows==0){
+            $pr_series=1000;
+            $pr_no = $dept_code.date('y')."-1000";
+        }else{
+            $pr_max = $this->super_model->get_max_where("pr_head", "pr_no","date_prepared LIKE '%$year%'");
+            
+            $pr_exp=explode("-", $pr_max);
+            $pr_series = $pr_exp[1]+1;
+            $pr_no = $dept_code.date('y').'-'.$pr_series;
         }
+        //echo $pr_no;
 
 
-        $pr_no = $dept_code.date('y')."-".$pr_series;
+
+        //$pr_no = $dept_code.date('y')."-".$pr_series;
 
         $data_head = array(
             'pr_id'=>$pr_id,

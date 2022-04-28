@@ -50,12 +50,23 @@ class Jor extends CI_Controller {
             $joi_id = $max+1;
         }
 
-        $rows_series = $this->super_model->count_rows("joi_series");
+/*        $rows_series = $this->super_model->count_rows("joi_series");
         if($rows_series==0){
             $series=1000;
         } else {
             $max = $this->super_model->get_max("joi_series", "series");
             $series = $max+1;
+        }*/
+
+
+        $year=date('Y');
+        $series_rows = $this->super_model->count_custom_where("joi_head","joi_date LIKE '%$year%'");
+        if($series_rows==0){
+            $series=1000;
+        }else{
+            $joi_max = $this->super_model->get_max_where("joi_head", "joi_no","joi_date LIKE '%$year%'");
+            $joi_exp=explode("-", $joi_max);
+            $series = $joi_exp[1]+1;
         }
 
             $jo= $this->super_model->select_column_where('jor_head', 'jo_no', 'jor_id',$this->input->post('jor_ids'));

@@ -146,13 +146,24 @@ class Po extends CI_Controller {
             $po_id = $max+1;
         }
 
-        $rows_series = $this->super_model->count_rows("po_series");
+
+        $year=date('Y');
+        $series_rows = $this->super_model->count_custom_where("po_head","po_date LIKE '%$year%'");
+        if($series_rows==0){
+            $series=1000;
+        }else{
+            $po_max = $this->super_model->get_max_where("po_head", "po_no","date_prepared LIKE '%$year%'");
+            $po_exp=explode("-", $po_max);
+            $series = $po_exp[1]+1;
+        }
+
+/*        $rows_series = $this->super_model->count_rows("po_series");
         if($rows_series==0){
             $series=1000;
         } else {
             $max = $this->super_model->get_max("po_series", "series");
             $series = $max+1;
-        }
+        }*/
 
         if(empty($this->input->post('dp'))){
             $pr_no = $this->super_model->select_column_where('pr_head', 'pr_no', 'pr_id',$this->input->post('prno'));
@@ -223,13 +234,24 @@ class Po extends CI_Controller {
         }
 
 
-            $rows_series = $this->super_model->count_rows("po_series");
+        $year=date('Y');
+        $series_rows = $this->super_model->count_custom_where("po_head","po_date LIKE '%$year%'");
+        if($series_rows==0){
+            $series=1000;
+        }else{
+            $po_max = $this->super_model->get_max_where("po_head", "po_no","date_prepared LIKE '%$year%'");
+            
+            $po_exp=explode("-", $po_max);
+            $series = $po_exp[1]+1;
+        }
+
+/*        $rows_series = $this->super_model->count_rows("po_series");
         if($rows_series==0){
             $series=1000;
         } else {
             $max = $this->super_model->get_max("po_series", "series");
             $series = $max+1;
-        }
+        }*/
 
         $po_no = 'RPO-'.$series;
 
@@ -518,7 +540,7 @@ class Po extends CI_Controller {
         $a=1;
 
 
-        $rows_dr = $this->super_model->count_rows("po_dr");
+/*        $rows_dr = $this->super_model->count_rows("po_dr");
         if($rows_dr==0){
             $dr_no=1000;
             $dr_id = 1;
@@ -527,6 +549,24 @@ class Po extends CI_Controller {
             $maxid = $this->super_model->get_max("po_dr", "dr_id");
             $dr_no = $max+1;
             $dr_id = $maxid+1;
+        }*/
+
+        $rows_head = $this->super_model->count_rows("po_dr");
+        if($rows_head==0){
+            $dr_id=1;
+        } else {
+            $maxid = $this->super_model->get_max("po_dr", "dr_id");
+            $dr_id = $maxid+1;
+        }
+
+
+        $year=date('Y');
+        $dr_count = $this->super_model->count_custom_where("po_dr","dr_date LIKE '%$year%'");
+        if($dr_count==0){
+            $dr_no = 1000;
+        }else{
+            $maxno = $this->super_model->get_max_where("po_dr", "dr_no","dr_date LIKE '%$year%'");
+            $dr_no = $maxno + 1;
         }
 
 
@@ -866,14 +906,22 @@ class Po extends CI_Controller {
             
         }
 
-    
-        $rows_dr = $this->super_model->count_rows("po_dr");
+        $year=date('Y');
+        $dr_count = $this->super_model->count_custom_where("po_dr","dr_date LIKE '%$year%'");
+        if($dr_count==0){
+            $dr_no = 1000;
+        }else{
+            $maxno = $this->super_model->get_max_where("po_dr", "dr_no","dr_date LIKE '%$year%'");
+            $dr_no = $maxno + 1;
+        }
+
+/*        $rows_dr = $this->super_model->count_rows("po_dr");
         if($rows_dr==0){
             $dr_no=1000;
         } else {
             $max = $this->super_model->get_max("po_dr", "dr_no");
             $dr_no = $max+1;
-        }
+        }*/
 
          $max_revision = $this->super_model->get_max_where("po_head", "revision_no","po_id = '$po_id'");
         $revision_no = $max_revision+1;
@@ -1729,7 +1777,7 @@ class Po extends CI_Controller {
         $po_id = $this->input->post('po_id');
         $pr_id = $this->input->post('pr_id');
         $group_id = $this->input->post('group_id');
-        $rows_dr = $this->super_model->count_rows("po_dr");
+/*        $rows_dr = $this->super_model->count_rows("po_dr");
         if($rows_dr==0){
             $dr_id = 1;
             $dr_no=1000;
@@ -1738,6 +1786,24 @@ class Po extends CI_Controller {
             $maxid = $this->super_model->get_max("po_dr", "dr_id");
             $dr_no = $max+1;
             $dr_id = $maxid+1;
+        }*/
+
+        $rows_head = $this->super_model->count_rows("po_dr");
+        if($rows_head==0){
+            $dr_id=1;
+        } else {
+            $maxid = $this->super_model->get_max("po_dr", "dr_id");
+            $dr_id = $maxid+1;
+        }
+
+
+        $year=date('Y');
+        $dr_count = $this->super_model->count_custom_where("po_dr","dr_date LIKE '%$year%'");
+        if($dr_count==0){
+            $dr_no = 1000;
+        }else{
+            $maxno = $this->super_model->get_max_where("po_dr", "dr_no","dr_date LIKE '%$year%'");
+            $dr_no = $maxno + 1;
         }
 
         $dr = array(
@@ -1811,7 +1877,7 @@ class Po extends CI_Controller {
         $pr_id = $this->input->post('pr_id');
         $group_id = $this->input->post('group_id');
         $count_item = $this->input->post('count_item');
-        $rows_dr = $this->super_model->count_rows("po_dr");
+/*        $rows_dr = $this->super_model->count_rows("po_dr");
         if($rows_dr==0){
             $dr_id = 1;
             $dr_no=1000;
@@ -1820,6 +1886,24 @@ class Po extends CI_Controller {
             $maxid = $this->super_model->get_max("po_dr", "dr_id");
             $dr_no = $max+1;
             $dr_id = $maxid+1;
+        }*/
+
+        $rows_head = $this->super_model->count_rows("po_dr");
+        if($rows_head==0){
+            $dr_id=1;
+        } else {
+            $maxid = $this->super_model->get_max("po_dr", "dr_id");
+            $dr_id = $maxid+1;
+        }
+
+
+        $year=date('Y');
+        $dr_count = $this->super_model->count_custom_where("po_dr","dr_date LIKE '%$year%'");
+        if($dr_count==0){
+            $dr_no = 1000;
+        }else{
+            $maxno = $this->super_model->get_max_where("po_dr", "dr_no","dr_date LIKE '%$year%'");
+            $dr_no = $maxno + 1;
         }
 
         $dr = array(
@@ -2375,7 +2459,7 @@ class Po extends CI_Controller {
         $max_revision = $this->super_model->get_max_where("po_head", "revision_no","po_id = '$po_id'");
         $revision_no = $max_revision+1;
 
-       $rows_dr = $this->super_model->count_rows("po_dr");
+/*       $rows_dr = $this->super_model->count_rows("po_dr");
         if($rows_dr==0){
             $dr_no=1000;
         } else {
@@ -2389,6 +2473,24 @@ class Po extends CI_Controller {
         } else {
             $max = $this->super_model->get_max("po_series", "series");
             $series = $max+1;
+        }*/
+
+        $rows_series = $this->super_model->count_rows("po_series");
+        if($rows_series==0){
+            $series=1000;
+        } else {
+            $max = $this->super_model->get_max("po_series", "series");
+            $series = $max+1;
+        }
+
+
+        $year=date('Y');
+        $rows_dr = $this->super_model->count_custom_where("po_dr","dr_date LIKE '%$year%'");
+        if($rows_dr==0){
+            $dr_no = 1000;
+        }else{
+            $max = $this->super_model->get_max_where("po_dr", "dr_no","dr_date LIKE '%$year%'");
+            $dr_no = $max + 1;
         }
 
         $data_series = array(
@@ -2763,7 +2865,7 @@ class Po extends CI_Controller {
     public function create_dr(){
          $po_id = $this->uri->segment(3);
 
-        $rows_dr = $this->super_model->count_rows("po_dr");
+/*        $rows_dr = $this->super_model->count_rows("po_dr");
         if($rows_dr==0){
             $dr_no=1000;
             $dr_id = 1;
@@ -2772,7 +2874,28 @@ class Po extends CI_Controller {
             $maxid = $this->super_model->get_max("po_dr", "dr_id");
             $dr_no = $max+1;
             $dr_id = $maxid+1;
+        }*/
+
+        $rows_head = $this->super_model->count_rows("po_dr");
+        if($rows_head==0){
+            $dr_id=1;
+        } else {
+            $maxid = $this->super_model->get_max("po_dr", "dr_id");
+            $dr_id = $maxid+1;
         }
+
+
+        $year=date('Y');
+        $rows_dr = $this->super_model->count_custom_where("po_dr","dr_date LIKE '%$year%'");
+        if($rows_dr==0){
+            $dr_no = 1000;
+        }else{
+            $max = $this->super_model->get_max_where("po_dr", "dr_no","dr_date LIKE '%$year%'");
+            $dr_no = $max + 1;
+        }
+
+
+
 
          $dr = array(
             'dr_id'=>$dr_id,
