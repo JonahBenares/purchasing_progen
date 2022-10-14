@@ -277,7 +277,7 @@ $ci =& get_instance();
                                         <?php } else { ?>
                                             <tr>
                                               <!--   <td><?php echo $x; ?></td> -->
-                                                  <td><?php echo $det['item_no']; ?></td>
+                                                <td><?php echo $det['item_no']; ?></td>
                                                 <td><?php echo $det['quantity']; ?></td>
                                                 <td><?php echo $det['uom']; ?></td>
                                                  <td><?php echo $det['pn_no']; ?></td>
@@ -299,11 +299,13 @@ $ci =& get_instance();
                                                 <td><?php echo $det['vendor']; ?></td>
                                                 <?php } ?>
                                                 <td align="center">
+                                                    <?php if($completed==0){ ?>
                                                     <a href="" class="regroupItem btn btn-xs btn-success btn-custon-three" data-toggle="modal" data-target="#regroup_g" title="Regroup" data-group="" data-id="<?php echo $det['pr_details_id']; ?>"><span class="fa fa-object-group"> </span></a>
                                                     <?php if($det['grouping_id']!=''){ ?>
                                                     <a href="" class="addVendor btn btn-xs btn-warning btn-custon-three" data-toggle="modal" data-target="#exampleModal" title="Add Vendor" data-group="<?php echo $det['grouping_id']; ?>" data-id="<?php echo $det['pr_details_id']; ?>"><span class="fa fa-shopping-cart"> </span></a>
                                                     <?php } ?>
                                                     <a class="cancelItem btn btn-custon-three btn-danger btn-xs" data-toggle="modal" data-target="#cancelItem" data-id="<?php echo $det['pr_details_id']; ?>"><span class="fa fa-ban" title="Cancel"></span></a>
+                                                <?php } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>

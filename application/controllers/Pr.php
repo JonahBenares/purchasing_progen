@@ -250,8 +250,34 @@ class Pr extends CI_Controller {
     public function pr_list(){  
         $this->load->view('template/header');
         $this->load->view('template/navbar');
-        $data['pr_head']=$this->super_model->select_custom_where("pr_head","cancelled='0' ORDER BY date_prepared ASC");
+        $data['pr_head']=$this->super_model->select_custom_where("pr_head","cancelled='0' AND completed='0' ORDER BY date_prepared ASC");
         $this->load->view('pr/pr_list',$data);
+        $this->load->view('template/footer');
+    }
+
+    public function completed_pr_list(){  
+        $this->load->view('template/header');
+        $this->load->view('template/navbar');
+        $count = $this->super_model->count_custom_where("pr_head","completed='1'");
+        if($count!=0){
+            foreach($this->super_model->select_custom_where("pr_head","completed='1' ORDER BY date_completed ASC") AS $heads){
+                $data['pr_completed'][] = array(
+                    'pr_id'=>$heads->pr_id,
+                    'pr_no'=>$heads->pr_no,
+                    'date_prepared'=>$heads->date_prepared,
+                    'urgency'=>$heads->urgency,
+                    'requestor'=>$heads->requestor,
+                    'date_imported'=>$heads->date_imported,
+                    'department'=>$heads->department,
+                    'completed_by'=> $this->super_model->select_column_where('users','fullname','user_id',$heads->completed_by),
+                    'date_completed'=> $heads->date_completed,
+                );
+            }
+        }else {
+            $data['pr_completed']=array();
+        }
+
+        $this->load->view('pr/completed_pr_list',$data);
         $this->load->view('template/footer');
     }
 
@@ -426,9 +452,28 @@ class Pr extends CI_Controller {
                 $data_det=array(
                     'cancelled'=>1,
                 );
-                $this->super_model->update_where('pr_details', $data, 'pr_details_id', $up->pr_details_id);
+                $this->super_model->update_where('pr_details', $data_det, 'pr_details_id', $up->pr_details_id);
             }
             echo "<script>alert('Successfully Cancelled!'); window.location ='".base_url()."pr/pr_list';</script>";
+        }
+    }
+
+    public function completed_pr(){
+        $pr_id=$this->input->post('pr_id');
+        $date=date('Y-m-d H:i:s');
+        $data=array(
+            'completed'=>1,
+            'completed_by'=>$_SESSION['user_id'],
+            'date_completed'=>$date,
+        );
+        
+        if($this->super_model->update_where('pr_head', $data, 'pr_id', $pr_id)){
+            foreach($this->super_model->select_custom_where('pr_details',"pr_id='$pr_id'") AS $up){
+                $data_com=array(
+                    'completed'=>1,
+                );
+                $this->super_model->update_where('pr_details', $data_com, 'pr_details_id', $up->pr_details_id);
+            }
         }
     }
 
@@ -447,6 +492,7 @@ class Pr extends CI_Controller {
                 $vendor.="-".$this->super_model->select_column_where('vendor_head','vendor_name','vendor_id',$ven->vendor_id) . "<br>";
             }
             $data['cancelled']=$det->cancelled;
+            $data['completed']=$det->completed;
             $data['details'][]=array(
                 'pr_details_id'=>$det->pr_details_id,
                 'quantity'=>$det->quantity,
@@ -461,6 +507,7 @@ class Pr extends CI_Controller {
                 'cancelled_reason'=>$det->cancelled_reason,
                 'cancelled_date'=>$det->cancelled_date,
                 'cancelled'=>$det->cancelled,
+                'completed'=>$det->completed,
                 'vendor'=>$vendor
             ); 
         }
