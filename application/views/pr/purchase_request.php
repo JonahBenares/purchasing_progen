@@ -300,7 +300,9 @@ $ci =& get_instance();
                                                 <?php } ?>
                                                 <td align="center">
                                                     <?php if($completed==0){ ?>
+                                                        <?php if($saved==1){ ?>
                                                     <a href="" class="regroupItem btn btn-xs btn-success btn-custon-three" data-toggle="modal" data-target="#regroup_g" title="Regroup" data-group="" data-id="<?php echo $det['pr_details_id']; ?>"><span class="fa fa-object-group"> </span></a>
+                                                    <?php } ?>
                                                     <?php if($det['grouping_id']!=''){ ?>
                                                     <a href="" class="addVendor btn btn-xs btn-warning btn-custon-three" data-toggle="modal" data-target="#exampleModal" title="Add Vendor" data-group="<?php echo $det['grouping_id']; ?>" data-id="<?php echo $det['pr_details_id']; ?>"><span class="fa fa-shopping-cart"> </span></a>
                                                     <?php } ?>
