@@ -286,7 +286,7 @@ $ci =& get_instance();
                                                 <td><?php echo (!empty($det['date_needed']) ? date('F j, Y', strtotime($det['date_needed'])) : ''); ?></td>
                                                 <?php if($saved==0){ ?>
                                                 <td style="padding: 0px!important" class="bor-red">
-                                                    <select class="form-control" name='group<?php echo $x; ?>' required>
+                                                    <select class="form-control" name='group<?php echo $x; ?>'>
                                                         <option value='' selected="selected">-Select Group-</option>
                                                         <?php foreach($ci->createColumnsArray('ZZ') AS $let){ ?>
                                                         <option value='<?php echo $let; ?>' <?php echo ($det['grouping_id'] == $let) ? ' selected' : ''; ?>><?php echo $let; ?></option>
