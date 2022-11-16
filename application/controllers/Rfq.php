@@ -488,6 +488,16 @@ class Rfq extends CI_Controller {
 
     }
 
+    public function canvass_complete(){
+        $rfq_id=$this->input->post('rfq_id[]');
+        foreach($rfq_id AS $r){
+            $data_head = array(
+                'completed'=>1
+            );
+            $this->super_model->update_where("rfq_head", $data_head, "rfq_id", $r);
+        }
+    }
+
     public function complete_rfq(){
          $rfq_id=$this->uri->segment(3);
           $data = array(

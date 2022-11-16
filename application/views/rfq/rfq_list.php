@@ -1,8 +1,9 @@
 
-   <script type="text/javascript">
+<script type="text/javascript">
  $( document ).ready(function() {
     $("#createAOQ").attr("disabled", true);
-    var $checkboxes = $('input[type="checkbox"]');
+    //var $checkboxes = $('input[type="checkbox"]');
+    var $checkboxes = $('.rfq_list');
     $checkboxes.change(function(){
         var countCheckedCheckboxes = $checkboxes.filter(':checked').length;
         if(countCheckedCheckboxes  > 5){
@@ -25,6 +26,27 @@ $(document).on("click", ".cancelRFQ", function () {
      $("#rfq_id").val(rfq_id);
 
 });
+
+function completeMultiple(){
+    var x = document.getElementsByClassName("multiple_complete");
+    var loc= document.getElementById("baseurl").value;
+    var redirect = loc+"rfq/canvass_complete";
+    var rfq_id = $('input[name="multiple_complete[]"]:checked').map(function(){ 
+        return this.value; 
+    }).get();
+
+    $.ajax({
+        type: "POST",
+        url: redirect,
+        data: {
+            'rfq_id[]': rfq_id
+        },
+        success: function(output){
+           //alert(output);
+        location.reload();
+        }
+    });
+}
 
 </script>
 
@@ -105,7 +127,7 @@ $(document).on("click", ".cancelRFQ", function () {
     </div>
     <div class="admin-dashone-data-table-area">
         <div class="container-fluid">
-         <form name="myform" action="<?php echo base_url(); ?>index.php/aoq/add_aoq" method="post">
+         <form name="myform" action="<?php echo base_url(); ?>index.php/aoq/add_aoq" method="post" id="complete_mult">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="sparkline8-list shadow-reset">
@@ -127,6 +149,8 @@ $(document).on("click", ".cancelRFQ", function () {
                                     <thead>
                                         <tr>
                                             <th width="5%"><input type="checkbox" class="form-control" name="" onClick="toggle_multi(this)"></th>
+                                            <th width="2%"><button type="button" class="btn-custon-three btn-info btn-xs clicked" onclick="completeMultiple()"><span class="fa fa-check" title="Canvass Complete"></span></button>
+                                            </th>
                                             <th width="13%">RFQ #</th>
                                             <th width="10%">PR #</th>
                                             <th>Vendor</th>
@@ -146,6 +170,10 @@ $(document).on("click", ".cancelRFQ", function () {
                                                 <?php if($h['completed']==1){ ?>
                                                  <input type="checkbox" class="form-control rfq_list" name="rfq[]" value="<?php echo $h['rfq_id']; ?>">
                                              <?php } ?>
+                                            </td>
+                                            <td>
+                                                <div class="container1"></div>
+                                                <input type="checkbox" class="form-control multiple_complete" name="multiple_complete[]" value="<?php echo $h['rfq_id']; ?>">
                                             </td>
                                             <td><?php echo $h['rfq_no']; ?></td>
                                             <td><?php echo $h['pr_no']."-".COMPANY; ?></td>
@@ -194,6 +222,7 @@ $(document).on("click", ".cancelRFQ", function () {
                         </div>
                     </div>
                 </div>
+                    <input type="hidden" name="baseurl" id="baseurl" value='<?php echo base_url(); ?>'>
                  </form>
             </div>
         </div>
