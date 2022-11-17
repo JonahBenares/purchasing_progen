@@ -27,14 +27,16 @@ $(document).on("click", ".cancelRFQ", function () {
 
 });
 
-function completeMultiple(){
-    var x = document.getElementsByClassName("multiple_complete");
+function serveMultiple(){
+    var x = document.getElementsByClassName("multiple_serve");
     var loc= document.getElementById("baseurl").value;
-    var redirect = loc+"rfq/canvass_complete";
-    var rfq_id = $('input[name="multiple_complete[]"]:checked').map(function(){ 
+    var redirect = loc+"rfq/serve_multiple";
+    var rfq_id = $('input[name="multiple_serve[]"]:checked').map(function(){ 
         return this.value; 
     }).get();
 
+    var conf = confirm('Are you sure you want to serve these rfq?');
+    if(conf){
     $.ajax({
         type: "POST",
         url: redirect,
@@ -44,8 +46,9 @@ function completeMultiple(){
         success: function(output){
            //alert(output);
         location.reload();
-        }
-    });
+            }
+        });
+    }
 }
 
 </script>
@@ -149,7 +152,7 @@ function completeMultiple(){
                                     <thead>
                                         <tr>
                                             <th width="5%"><input type="checkbox" class="form-control" name="" onClick="toggle_multi(this)"></th>
-                                            <th width="2%"><button type="button" class="btn-custon-three btn-info btn-xs clicked" onclick="completeMultiple()"><span class="fa fa-check" title="Canvass Complete"></span></button>
+                                            <th width="2%"><button type="button" class="btn btn-custon-three btn-success clicked" onclick="serveMultiple()"><span class="fa fa-archive" title="Serve Multiple"></span></button>
                                             </th>
                                             <th width="13%">RFQ #</th>
                                             <th width="10%">PR #</th>
@@ -173,7 +176,7 @@ function completeMultiple(){
                                             </td>
                                             <td>
                                                 <div class="container1"></div>
-                                                <input type="checkbox" class="form-control multiple_complete" name="multiple_complete[]" value="<?php echo $h['rfq_id']; ?>">
+                                                <input type="checkbox" class="form-control multiple_serve" name="multiple_serve[]" value="<?php echo $h['rfq_id']; ?>">
                                             </td>
                                             <td><?php echo $h['rfq_no']; ?></td>
                                             <td><?php echo $h['pr_no']."-".COMPANY; ?></td>
